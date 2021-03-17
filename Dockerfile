@@ -10,9 +10,12 @@ RUN apk add glibc-2.31-r0.apk glibc-bin-2.31-r0.apk glibc-i18n-2.31-r0.apk
 RUN /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8
 RUN apk add --no-cache curl bash libstdc++
 
-RUN curl -L https://raw.githubusercontent.com/hasura/graphql-engine/v1.3.3/cli/get.sh | bash
+RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
-RUN hasura plugins install cli-ext --version 1.3.3
+RUN hasura update-cli --version v1.3.0
+RUN hasura plugins install cli-ext --version 1.3.0
+
+
 RUN touch config.yaml
 
 COPY LICENSE LICENSE
