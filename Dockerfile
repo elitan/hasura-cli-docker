@@ -12,9 +12,8 @@ RUN apk add --no-cache curl bash libstdc++
 
 RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
-RUN hasura update-cli --version v1.3.3
-RUN hasura plugins install cli-ext --version v1.3.3
-
+RUN hasura update-cli --version v1.3.4-beta.1
+RUN hasura plugins install cli-ext --version v1.3.4-beta.1
 
 RUN touch config.yaml
 
@@ -22,6 +21,3 @@ COPY LICENSE LICENSE
 
 ENTRYPOINT ["hasura"]
 CMD ["-?"]
-
-# ENTRYPOINT ["tail"]
-# CMD ["-f","/dev/null"]
