@@ -3,10 +3,6 @@
 ```
 docker run --rm \
 -v ~/my/hasura/project/directory:/hasuracli \
-nhost/hasura-cli-docker \
-migrate status
+nhost/hasura-cli-docker:v1.3.3 \
+version
 ```
-
-## Usage
-
-Work in progress...
