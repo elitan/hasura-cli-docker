@@ -1,23 +1,16 @@
-FROM alpine:3.12.4
+FROM debian:buster-slim
 
-WORKDIR /hasuracli
+ARG HASURA_VERSION
 
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub  
-RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk
-RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-bin-2.31-r0.apk 
-RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-i18n-2.31-r0.apk
-RUN apk add glibc-2.31-r0.apk glibc-bin-2.31-r0.apk glibc-i18n-2.31-r0.apk
-RUN /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8
-RUN apk add --no-cache curl bash libstdc++
+WORKDIR /usr/src/hasura
 
-RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+RUN apt-get update -y && apt-get install -y curl socat procps && rm -rf /var/lib/apt/lists/*
 
-RUN hasura update-cli --version v2.0.0-alpha.4
-RUN hasura plugins install cli-ext --version v2.0.0-alpha.4
+RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && curl -L -o /usr/local/bin/hasura https://github.com/hasura/graphql-engine/releases/download/v${HASURA_VERSION}/cli-hasura-linux-${arch}
+RUN chmod +x /usr/local/bin/hasura
 
-RUN touch config.yaml
+COPY start.sh /usr/local/bin/hasura-console-start
 
-COPY LICENSE LICENSE
+RUN chmod +x /usr/local/bin/hasura-console-start
 
-ENTRYPOINT ["hasura"]
-CMD ["-?"]
+CMD "/usr/local/bin/hasura-console-start"
